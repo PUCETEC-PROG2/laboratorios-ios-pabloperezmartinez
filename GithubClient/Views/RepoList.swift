@@ -10,11 +10,23 @@ import SwiftUI
 struct RepoList: View {
     var body: some View {
         NavigationStack {
-            VStack {
-                Text("Lista de repositorios!")
+            ScrollView {
+                VStack {
+                    RepoItem()
+                    RepoItem()
+                    RepoItem()
+                    RepoItem()
+                    RepoItem()
+                    RepoItem()
+                    RepoItem()
+                    RepoItem()
+                    RepoItem()
+                    RepoItem()
+
+                }
+                .padding()
             }
             .navigationTitle("Repositorios")
-            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }
