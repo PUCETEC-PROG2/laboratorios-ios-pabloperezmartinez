@@ -8,22 +8,38 @@
 import SwiftUI
 
 struct RepoItem: View {
+    let repository: Repository
     var body: some View {
         HStack {
-            Image (uiImage: .githubLogo)
-                .resizable()
-                .frame(width: 80, height: 80)
-            Spacer()
+            AsyncImage(url: URL(string: repository.owner.avatarUrl)!) { image in
+                image
+                    .resizable()
+                    .scaledToFill()
+            } placeholder: {
+                Image(uiImage: .githubLogo)
+                    .resizable()
+                    .scaledToFill()
+            }
+            .frame(width: 80, height: 80)
+            .padding(.trailing, 8)
+            
             VStack (alignment: .leading) {
-                Text("Nombre del repositorio")
+                Text(repository.name)
                     .font(.title2)
-                Text("Lorem Inpsun dolor descripción del repositorio")
-                HStack {
-                    Text("Leguaje")
+                
+                if let description = repository.description {
+                    Text(description)
                         .font(.caption)
-                    Spacer()
-                    Text("Swift")
-                        .font(.caption)
+                }
+                
+                if let language = repository.language{
+                    HStack {
+                        Text("Lenguaje")
+                            .font(.caption)
+                        Spacer()
+                        Text(language)
+                            .font(.caption)
+                    }
                 }
             }
         }
@@ -32,5 +48,18 @@ struct RepoItem: View {
 }
 
 #Preview {
-    RepoItem()
+    RepoItem(
+        repository: Repository (
+            id: 1,
+            name: "Ejemplo REPO",
+            description: "Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto.",
+            language: "Swift",
+            owner: UserInfo(
+                login: "pabloperezmartinez",
+                name: "Pablo Pérez Martínez",
+                avatarUrl: "https://avatars.githubusercontent.com/u/48026030?v=4",
+                bio: "Esta es una Bio de prueba"
+            )
+        )
+    )
 }
