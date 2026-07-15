@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		AC75DAF730081AFB00CD3584 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = AC75DAF630081AF000CD3584 /* .gitignore */; };
+		AC75DB0E3008268F00CD3584 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = AC75DB0D3008268F00CD3584 /* Alamofire */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AC75DB0E3008268F00CD3584 /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,6 +73,7 @@
 			);
 			name = GithubClient;
 			packageProductDependencies = (
+				AC75DB0D3008268F00CD3584 /* Alamofire */,
 			);
 			productName = GithubClient;
 			productReference = AC15474E2F16A0A300962CDB /* GithubClient.app */;
@@ -100,6 +103,9 @@
 			);
 			mainGroup = AC1547452F16A0A300962CDB;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				AC75DB0C3008268F00CD3584 /* XCRemoteSwiftPackageReference "Alamofire" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = AC15474F2F16A0A300962CDB /* Products */;
 			projectDirPath = "";
@@ -329,6 +335,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		AC75DB0C3008268F00CD3584 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.12.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		AC75DB0D3008268F00CD3584 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AC75DB0C3008268F00CD3584 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = AC1547462F16A0A300962CDB /* Project object */;
 }
