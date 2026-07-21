@@ -5,60 +5,71 @@
 //  Created by Usuario invitado on 7/7/26.
 //
 
+import Foundation
 import SwiftUI
 
 struct RepoForm: View {
-    @State private var repoName: String = ""
-    @State private var repoDescription: String = ""
+    @StateObject private var viewController = RepoFormViewController()
+    @Binding var selectTab: Int
     
     var body: some View {
         NavigationStack {
             VStack {
-                Spacer()
-                
-                TextField(
-                    "",
-                    text: $repoName,
-                    prompt: Text("Nombre del repositorio")
-                        .foregroundStyle(.black.opacity(0.4))
-                )
-                .textFieldStyle(.roundedBorder)
-                .padding(.vertical)
-                
-                TextField(
-                    "",
-                    text: $repoDescription,
-                    prompt: Text("Descripción del repositorio")
-                        .foregroundStyle(.black.opacity(0.4))
-                )
-                .textFieldStyle(.roundedBorder)
-                .lineLimit(3...6)
-                .padding(.vertical)
-                
-                Spacer()
-                
-                HStack {
-                    Button(action: {
-                        print("Botón presionado")
-                    }){
-                        Label("Cancelar", systemImage: "xmark.circle")
-                            .padding(.all, 4)
-                            .foregroundStyle(.red)
-                    }
-                    .buttonStyle(.bordered)
-                    .padding(.horizontal, 4)
+                if viewController.isLoading {
+                    ProgressView("Creando repositorio...")
+                } else if let errorMsg = viewController.errorMsg {
+                    Text(errorMsg)
+                        .foregroundStyle(.red)
+                        .padding()
+                } else {
+                    Spacer()
+                    TextField(
+                        "Nombre del repositorio",
+                        text: $viewController.repoName,
+                    )
+                    .textFieldStyle(.roundedBorder)
+                    .padding(.vertical)
                     
-                    Button(action: {
-                        print("Botón presionado")
-                    }){
-                        Label("Guardar", systemImage: "square.and.arrow.down")
-                            .padding(.all, 4)
+                    TextField(
+                        "Descripción del repositorio",
+                        text: $viewController.repoDescription,
+                        axis: .vertical,
+                    )
+                    .textFieldStyle(.roundedBorder)
+                    .lineLimit(3...6)
+                    .padding(.vertical)
+                    
+                    Spacer()
+                    
+                    HStack {
+                        Button(action: {
+                            print("Botón presionado")
+                        }){
+                            Label("Cancelar", systemImage: "xmark.circle")
+                                .padding(.all, 4)
+                                .foregroundStyle(.red)
+                        }
+                        .buttonStyle(.bordered)
+                        .padding(.horizontal, 4)
+                        
+                        Button(action: {
+                            Task {
+                                await viewController.createRepository()
+                                if (viewController.errorMsg == nil) {
+                                    selectTab = 0
+                                }
+                            }
+                        }){
+                            Label("Guardar", systemImage: "square.and.arrow.down")
+                                .padding(.all, 4)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .padding(.horizontal, 4)
+                        .disabled(viewController.repoName == "")
                     }
-                    .buttonStyle(.borderedProminent)
-                    .padding(.horizontal, 4)
                 }
-                
             }
+            
             .padding()
             .navigationTitle("Formulario de repositorio")
             .navigationBarTitleDisplayMode(.inline)
@@ -67,5 +78,5 @@ struct RepoForm: View {
 }
 
 #Preview {
-    RepoForm()
+    RepoForm(selectTab: .constant(1))
 }
