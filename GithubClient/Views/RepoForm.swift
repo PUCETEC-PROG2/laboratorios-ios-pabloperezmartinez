@@ -9,43 +9,61 @@
 import SwiftUI
 
 struct RepoForm: View {
-    @State private var repoName: String = ""
-    @State private var repoDescription: String = ""
+    @StateObject private var viewController = RepoFormViewController()
+    @Binding var selectedTab: Int
     
     var body: some View {
         NavigationStack {
             VStack {
-                Spacer()
-                TextField(
-                    "",
-                    text: $repoName,
-                    prompt: Text("Nombre del repositorio")
-                        .foregroundStyle(.accent.opacity(0.6))
-                )
-                .textFieldStyle(.roundedBorder)
-                .padding(.vertical)
-            
-                TextField(
-                    "",
-                    text: $repoDescription,
-                    prompt: Text("Decripción del repositorio")
-                        .foregroundStyle(.accent.opacity(0.6))
-                )
-                .textFieldStyle(.roundedBorder)
-                .lineLimit(4...10)
-                .padding(.vertical)
                 
-                Spacer()
-                
-                Button(action: {
-                    print ("Botón aplastado")
-                }){
-                    Label("Guardar Repo", systemImage: "square.and.arrow.down")
-                        .padding(.all, 8)
-                        .frame(maxWidth:.infinity)
+                if viewController.isLoading {
+                    ProgressView("Creando repositorio...")
+                } else {
+                    Spacer()
+                    TextField(
+                        "",
+                        text: $viewController.repoName,
+                        prompt: Text("Nombre del repositorio")
+                            .foregroundStyle(.accent.opacity(0.6))
+                    )
+                    .textFieldStyle(.roundedBorder)
+                    .padding(.vertical)
+                    
+                    TextField(
+                        "",
+                        text: $viewController.repoDescription,
+                        prompt: Text("Decripción del repositorio")
+                            .foregroundStyle(.accent.opacity(0.6)),
+                        axis: .vertical,
+                    )
+                    .textFieldStyle(.roundedBorder)
+                    .lineLimit(4...10)
+                    .padding(.vertical)
+                    
+                    if let errorMsg = viewController.errorMsg {
+                        Spacer()
+                        Text(errorMsg)
+                            .foregroundStyle(.red)
+                            .padding()
+                    }
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        Task {
+                            await viewController.createRepository()
+                            if viewController.errorMsg == nil {
+                                selectedTab = 0
+                            }
+                        }
+                    }){
+                        Label("Guardar Repo", systemImage: "square.and.arrow.down")
+                            .padding(.all, 8)
+                            .frame(maxWidth:.infinity)
                         
+                    }
+                    .buttonStyle(.borderedProminent)
                 }
-                .buttonStyle(.borderedProminent)
             }
             .padding()
             .navigationTitle("Formulario de repositorio")
@@ -55,5 +73,5 @@ struct RepoForm: View {
 }
 
 #Preview {
-    RepoForm()
+    RepoForm(selectedTab: .constant(1))
 }
