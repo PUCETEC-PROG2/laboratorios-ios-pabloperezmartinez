@@ -50,4 +50,34 @@ class GithubService {
         }
     }
     
+    func createRepository(name: String, description: String) async throws -> Repository {
+        let response = await AF.request(
+            "\(baseUrl)/user/repos",
+            method: .post,
+            parameters: [
+                "name": name,
+                "description": description
+            ],
+            encoding: JSONEncoding.default,
+            headers: headers
+        )
+        .validate(statusCode: 200..<300)
+        .serializingDecodable(Repository.self)
+        .response
+        
+        if let data = response.data,
+           let json = String(data: data, encoding: .utf8) {
+            print ("***** Respuesta al crear repositorio: *******")
+            print(json)
+        }
+        
+        switch response.result {
+            case .success(let repository):
+                return repository
+            case .failure(let error):
+                print(error)
+                throw error
+        }
+    }
+
 }
